@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vouch - Your payments vouch for you</title>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#10231f;--teal:#0f4c45;--teal2:#1b7f5c;--gold:#f2a900;--bg:#f1f6f4;--card:#fff;--line:#d5e2de;--red:#c0392b;--mut:#5b716c}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Mukta',system-ui,'Noto Sans Devanagari',sans-serif;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.45}
+header{background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;gap:10px;flex-wrap:wrap}
+.brand{font-size:28px;font-weight:800;letter-spacing:.5px}.brand small{display:block;font-size:13px;font-weight:400;opacity:.8;letter-spacing:0}
+.right{display:flex;gap:10px;align-items:center}
+.lang{display:flex;border:1px solid #ffffff80;border-radius:20px;overflow:hidden}
+.lang button{background:none;border:0;color:#fff;padding:6px 14px;font:inherit;cursor:pointer}
+.lang button.on{background:var(--gold);color:var(--ink);font-weight:600}
+.who{font-size:15px;opacity:.9}
+main{max-width:980px;margin:0 auto;padding:20px}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.btn{background:var(--teal);color:#fff;border:0;border-radius:10px;padding:10px 18px;font-weight:600}
+.btn.gold{background:var(--gold);color:var(--ink)}.btn.out{background:#fff;color:var(--teal);border:2px solid var(--teal)}
+.btn.red{background:#fff;color:var(--red);border:2px solid var(--red)}
+.logout{background:none;border:1px solid #fff;color:#fff;border-radius:10px;padding:6px 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+h1{font-size:30px;margin:0 0 6px}h2{font-size:21px;margin:0 0 10px}p{margin:6px 0}
+.mut{color:var(--mut)}
+.login{max-width:440px;margin:30px auto}
+input,select{width:100%;padding:11px;border:1.5px solid var(--line);border-radius:10px;font:inherit;margin:4px 0 12px;background:#fff}
+.demo{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.demo button{background:#e4f0ec;border:0;border-radius:16px;padding:5px 12px;color:var(--teal)}
+.err{color:var(--red);font-weight:600}.btn:disabled{opacity:.5;cursor:default}
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tabs button{background:#fff;border:1.5px solid var(--line);border-radius:22px;padding:8px 18px}
+.tabs button.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}}
+.meter{position:relative;width:210px;height:210px;margin:0 auto}
+.meter svg{transform:rotate(-90deg)}
+.meter .n{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:56px;font-weight:800;line-height:1}
+.meter .n small{font-size:14px;font-weight:400;color:var(--mut)}
+.ring{transition:stroke-dashoffset 1.6s cubic-bezier(.2,.8,.2,1)}
+.pill{display:inline-block;padding:3px 12px;border-radius:14px;font-size:14px;font-weight:600}
+.ok{background:#d9f2e6;color:#0b5c3b}.warn{background:#fde2dd;color:#962d20}
+ul.r{list-style:none;padding:0;margin:0}ul.r li{padding:8px 0;border-bottom:1px solid var(--line)}
+ul.r li:last-child{border:0}.plus{color:var(--teal2);font-weight:800}.minus{color:var(--red);font-weight:800}
+.bars{display:flex;align-items:flex-end;gap:8px;height:110px}.bars div{flex:1;background:var(--teal2);border-radius:5px 5px 0 0;position:relative;transition:height 1s}
+.bars span{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:12px;color:var(--mut)}
+.stat{font-size:28px;font-weight:800;color:var(--teal)}
+.row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.stamp{border:3px solid var(--teal2);color:var(--teal2);border-radius:10px;padding:2px 12px;font-weight:800;transform:rotate(-4deg);display:inline-block}
+.stamp.bad{border-color:var(--red);color:var(--red)}
+.passport{background:linear-gradient(135deg,var(--teal),#17695e);color:#fff;border-radius:16px;padding:20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.passport .qr{background:#fff;padding:8px;border-radius:10px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.cmp div{border-radius:12px;padding:14px;text-align:center}
+.cmp .a{background:#fde2dd}.cmp .b{background:#d9f2e6}.cmp b{font-size:28px;display:block}
+.tip{background:#fff6dd;border-left:5px solid var(--gold);padding:10px 14px;border-radius:8px;margin:8px 0}
+input[type=range]{padding:0;border:0}
+.spin{text-align:center;padding:30px;font-weight:600;color:var(--teal)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const TX={en:{
+tag:"Your payments vouch for you",login:"Log in",user:"Username",pass:"Password",demo:"Demo accounts (password 1234):",bad:"Wrong username or password.",out:"Log out",
+hello:"Hello",tabs:["My Score","Vouch Card","Loan Calculator"],score:"Vouch Score",of:"out of 100",up:"Upload UPI statement",upn:"(demo uses sample data)",analyzing:"Reading your payments...",
+why:"Why this score",coach:"How to improve",income:"Monthly income",speak:"Read aloud",voice:s=>`Your Vouch score is ${s}.`,
+d:n=>`You earn on ${n} days a month`,dn:n=>`You earn on only ${n} days a month`,p:n=>`${n} different customers pay you`,pn:n=>`Only ${n} different customers pay you`,
+t:n=>`Income is spread across customers (top customer ${n}%)`,tn:n=>`Top customers give ${n}% of your income`,g:n=>`Income is growing ${n}% a month`,gn:"Income growth is flat",
+tip1:"Accept UPI on weekdays too",tip2:"Bring in more regular customers",tip3:"Save ₹50 on your best 5 days for a rainy-day fund",pts:"points",
+ready:n=>`You are ${n} points away from the next loan level`,top:"You have reached the top loan level",
+card:"Vouch Card",cardsub:"One QR any lender can scan. You control who sees it.",verified:"VERIFIED",review:"NEEDS REVIEW",trust:"Trust check",trok:"No circular or edited transactions found",trbad:"Many payments move between the same few accounts",
+share:"Share with lender for 7 days",revoke:"Revoke access",shared:"Shared. Lender can view your card.",notshared:"Not shared. Nobody can view your card.",log:"Who viewed your card",nolog:"No views yet",
+lender:"Lender Dashboard",pick:"Choose a vendor's Vouch Card",scan:"Scan QR",denied:"Access denied. The vendor has not shared this card.",
+avg:"Average daily income",mon:"Estimated monthly income",cap:"Repayment capacity per day",safe:"Suggested safe loan",over:"Repay over 150 days at",perday:"per day",trade:"Trade",
+calc:"Moneylender vs Fair Loan",amt:"Loan amount",mths:"Months",ml:"Moneylender (5% per month)",fl:"Fair loan (18% per year)",rep:"You repay",save:"You save",note:"Illustrative rates for demo. Verify with RBI data before real use.",
+story:"Raju takes 200 UPI payments a day, yet the bank asked for income proof. Log in as raju to see his proof.",cv:"Community Vouching",cvs:"People who know your work can vouch for you. Each one adds points.",ask:"Ask someone to vouch",
+cash:"Cash income",cashs:"Add your daily cash sales. It counts at half weight because it is self-declared.",cashl:"Daily cash sales",selfd:"Self-declared",
+wa:(n,s)=>`${n}'s Vouch Card: score ${s}/100. Verified by Vouch.`,offer:"A lender approved your loan offer!",appr:"Approve loan offer",apprd:"Offer approved. The vendor is notified.",
+fest:"Festival Planner",festd:(w,s,l,r)=>`Diwali is about ${w} weeks away. In sample data, sales jump about 40% that week. Extra stock may cost around ${s}. A safe loan of ${l} would be ${r} per day.`},
+hi:{
+tag:"आपके पेमेंट ही आपकी गवाही हैं",login:"लॉग इन",user:"यूज़रनेम",pass:"पासवर्ड",demo:"डेमो अकाउंट (पासवर्ड 1234):",bad:"यूज़रनेम या पासवर्ड गलत है।",out:"लॉग आउट",
+hello:"नमस्ते",tabs:["मेरा स्कोर","वाउच कार्ड","लोन कैलकुलेटर"],score:"वाउच स्कोर",of:"100 में से",up:"UPI स्टेटमेंट अपलोड करें",upn:"(डेमो में सैंपल डेटा है)",analyzing:"आपके पेमेंट पढ़ रहे हैं...",
+why:"यह स्कोर क्यों",coach:"स्कोर कैसे बढ़ाएं",income:"मासिक आमदनी",speak:"सुनें",voice:s=>`आपका वाउच स्कोर ${s} है।`,
+d:n=>`आप महीने में ${n} दिन कमाते हैं`,dn:n=>`आप महीने में सिर्फ ${n} दिन कमाते हैं`,p:n=>`${n} अलग ग्राहक आपको पेमेंट करते हैं`,pn:n=>`सिर्फ ${n} अलग ग्राहक पेमेंट करते हैं`,
+t:n=>`आमदनी कई ग्राहकों में बंटी है (सबसे बड़ा ग्राहक ${n}%)`,tn:n=>`कुछ ग्राहकों से ${n}% आमदनी आती है`,g:n=>`आमदनी हर महीने ${n}% बढ़ रही है`,gn:"आमदनी में बढ़त नहीं है",
+tip1:"हफ्ते के दिनों में भी UPI लें",tip2:"ज़्यादा नियमित ग्राहक जोड़ें",tip3:"अपने 5 सबसे अच्छे दिनों में ₹50 बचाएं, बरसात के लिए",pts:"अंक",
+ready:n=>`अगले लोन स्तर के लिए ${n} अंक बाकी`,top:"आप सबसे ऊँचे लोन स्तर पर हैं",
+card:"वाउच कार्ड",cardsub:"एक QR जिसे कोई भी लेंडर स्कैन कर सकता है। कौन देखे, यह आप तय करें।",verified:"सत्यापित",review:"जाँच ज़रूरी",trust:"भरोसा जाँच",trok:"कोई घूमता हुआ या बदला हुआ लेनदेन नहीं मिला",trbad:"कुछ ही खातों के बीच बार-बार पैसा घूम रहा है",
+share:"7 दिन के लिए लेंडर को दिखाएं",revoke:"एक्सेस वापस लें",shared:"शेयर किया गया। लेंडर आपका कार्ड देख सकता है।",notshared:"शेयर नहीं किया। कोई कार्ड नहीं देख सकता।",log:"आपका कार्ड किसने देखा",nolog:"अभी तक किसी ने नहीं देखा",
+lender:"लेंडर डैशबोर्ड",pick:"वेंडर का वाउच कार्ड चुनें",scan:"QR स्कैन करें",denied:"एक्सेस नहीं मिला। वेंडर ने यह कार्ड शेयर नहीं किया है।",
+avg:"औसत रोज़ की आमदनी",mon:"अनुमानित मासिक आमदनी",cap:"रोज़ चुकाने की क्षमता",safe:"सुझाया गया सुरक्षित लोन",over:"150 दिन में चुकाएं, प्रतिदिन",perday:"रोज़",trade:"काम",
+calc:"साहूकार बनाम सही लोन",amt:"लोन राशि",mths:"महीने",ml:"साहूकार (5% प्रति माह)",fl:"सही लोन (18% सालाना)",rep:"आप चुकाएंगे",save:"आपकी बचत",note:"डेमो के लिए अनुमानित दरें। असली इस्तेमाल से पहले RBI डेटा जाँचें।",
+story:"राजू रोज़ 200 UPI पेमेंट लेता है, फिर भी बैंक ने आमदनी का सबूत माँगा। उसका सबूत देखने के लिए raju से लॉग इन करें।",cv:"सामुदायिक गवाही",cvs:"आपका काम जानने वाले लोग आपकी गवाही दे सकते हैं। हर गवाही से अंक बढ़ते हैं।",ask:"किसी से गवाही माँगें",
+cash:"नकद आमदनी",cashs:"रोज़ की नकद बिक्री जोड़ें। यह खुद बताई गई है, इसलिए आधा गिना जाता है।",cashl:"रोज़ की नकद बिक्री",selfd:"खुद बताया गया",
+wa:(n,s)=>`${n} का वाउच कार्ड: स्कोर ${s}/100। वाउच द्वारा सत्यापित।`,offer:"एक लेंडर ने आपका लोन ऑफर मंज़ूर किया!",appr:"लोन ऑफर मंज़ूर करें",apprd:"ऑफर मंज़ूर। वेंडर को सूचना मिल गई।",
+fest:"त्योहार प्लानर",festd:(w,s,l,r)=>`दिवाली करीब ${w} हफ्ते दूर है। सैंपल डेटा में उस हफ्ते बिक्री लगभग 40% बढ़ती है। अतिरिक्त स्टॉक पर करीब ${s} लगेंगे। ${l} का सुरक्षित लोन रोज़ ${r} की किस्त होगा।`}};
+const V={
+raju:{n:{en:"Raju",hi:"राजू"},tr:{en:"Chai stall",hi:"चाय का ठेला"},days:26,pay:60,top:35,gr:8,avg:700,ok:1,m:[16,17,18,19,20,21]},
+imran:{n:{en:"Imran",hi:"इमरान"},tr:{en:"Auto driver",hi:"ऑटो चालक"},days:22,pay:90,top:10,gr:5,avg:900,ok:1,m:[21,20,22,23,24,25]},
+sunita:{n:{en:"Sunita",hi:"सुनीता"},tr:{en:"Tailor",hi:"दर्जी"},days:20,pay:25,top:50,gr:0,avg:450,ok:0,m:[9,11,8,10,9,10]}};
+const ACC={raju:["vendor"],imran:["vendor"],sunita:["vendor"],bank:["lender"]};
+let S={lang:"en",user:null,tab:0,u:"",p:"",err:0,shared:{},log:[],lid:"raju",lres:null,busy:0,amt:10000,mo:6};
+const t=(k,...a)=>{const v=TX[S.lang][k];return typeof v==="function"?v(...a):v};
+const inr=n=>"₹"+Math.round(n).toLocaleString("en-IN");
+function calc(v){const a=v.avg+(v.cash||0)*.5;let s=Math.min(100,Math.round(Math.min(v.days/30,1)*40+Math.min(v.pay/80,1)*25+(1-v.top/100)*20+Math.min(v.gr,20)/20*15)+Math.min((v.vc||0)*2,6));
+ let loan=Math.round(a*.15*150/500)*500;if(s<50)loan=Math.round(loan/2/500)*500;
+ return{s,loan,cap:Math.round(a*.15),mon:a*v.days,next:s<60?60-s:s<80?80-s:0}}
+function reasons(v){const r=[];
+ r.push(v.days>=24?["+",t("d",v.days)]:["−",t("dn",v.days)]);
+ r.push(v.pay>=50?["+",t("p",v.pay)]:["−",t("pn",v.pay)]);
+ r.push(v.top<=40?["+",t("t",v.top)]:["−",t("tn",v.top)]);
+ r.push(v.gr>=5?["+",t("g",v.gr)]:["−",t("gn")]);return r}
+function qr(id){let h=0;for(const c of id+"vouch")h=(h*31+c.charCodeAt(0))>>>0;const N=21,z=7;let o="";
+ const fin=(x,y)=>(x<7&&y<7)||(x>13&&y<7)||(x<7&&y>13);
+ for(let y=0;y<N;y++)for(let x=0;x<N;x++){let on;
+  if(fin(x,y)){const lx=x%14%7,ly=y%14%7;on=lx==0||lx==6||ly==0||ly==6||(lx>1&&lx<5&&ly>1&&ly<5)}
+  else{h=(h*1103515245+12345)>>>0;on=(h>>16)&1}
+  if(on)o+=`<rect x="${x*z}" y="${y*z}" width="${z}" height="${z}"/>`}
+ return`<svg width="150" height="150" viewBox="0 0 147 147" fill="#10231f" role="img" aria-label="QR">${o}</svg>`}
+function head(){return`<header><div class="brand">Vouch<small>${t("tag")}</small></div><div class="right">
+${S.user?`<span class="who">${t("hello")}, ${V[S.user]?V[S.user].n[S.lang]:"Bank"}</span><button class="logout" onclick="logout()">${t("out")}</button>`:""}
+<div class="lang" role="group" aria-label="Language"><button class="${S.lang=="en"?"on":""}" onclick="setL('en')">English</button><button class="${S.lang=="hi"?"on":""}" onclick="setL('hi')">हिंदी</button></div></div></header>`}
+function loginV(){return`<div class="card login"><h1>${t("login")}</h1><div class="tip">${t("story")}</div>
+<label>${t("user")}<input id="u" value="${S.u}" oninput="S.u=this.value" autocomplete="off"></label>
+<label>${t("pass")}<input id="p" type="password" value="${S.p}" oninput="S.p=this.value" onkeydown="if(event.key=='Enter')login()"></label>
+${S.err?`<p class="err">${t("bad")}</p>`:""}<button class="btn" style="width:100%" onclick="login()">${t("login")}</button>
+<p class="mut" style="margin-top:16px">${t("demo")}</p><div class="demo">${Object.keys(ACC).map(k=>`<button onclick="fill('${k}')">${k}</button>`).join("")}</div></div>`}
+function vendorV(){const v=V[S.user],c=calc(v),rs=reasons(v);
+ const tabs=`<div class="tabs">${TX[S.lang].tabs.map((x,i)=>`<button class="${S.tab==i?"on":""}" onclick="S.tab=${i};render()">${x}</button>`).join("")}</div>`;
+ if(S.tab==0)return tabs+`<div class="grid"><div class="card" style="text-align:center"><h2>${t("score")}</h2>
+ ${S.busy?`<div class="spin">${t("analyzing")}</div>`:`<div class="meter"><svg width="210" height="210"><circle cx="105" cy="105" r="90" fill="none" stroke="#e4f0ec" stroke-width="16"/><circle id="ring" class="ring" cx="105" cy="105" r="90" fill="none" stroke="${c.s>=60?"#1b7f5c":"#f2a900"}" stroke-width="16" stroke-linecap="round" stroke-dasharray="565.5" stroke-dashoffset="565.5"/></svg><div class="n"><span id="num">0</span><small>${t("of")}</small></div></div>
+ <p><b>${c.next?t("ready",c.next):t("top")}</b></p>`}
+ <p><button class="btn gold" onclick="upload()">${t("up")}</button><br><small class="mut">${t("upn")}</small><input type="file" id="f" hidden onchange="analyze()"></p>
+ <button class="btn out" onclick="speak(${c.s})">🔊 ${t("speak")}</button></div>
+ <div><div class="card"><h2>${t("why")}</h2><ul class="r">${rs.map(r=>`<li><span class="${r[0]=="+"?"plus":"minus"}">${r[0]}</span> ${r[1]}</li>`).join("")}</ul></div>
+ <div class="card"><h2>${t("coach")}</h2>${v.days<24?`<div class="tip">${t("tip1")} (+5 ${t("pts")})</div>`:""}${v.top>40||v.pay<50?`<div class="tip">${t("tip2")} (+8 ${t("pts")})</div>`:""}<div class="tip">${t("tip3")}</div></div></div></div>
+ <div class="card"><h2>${t("income")}</h2><div class="bars" style="margin-bottom:26px">${v.m.map((x,i)=>`<div style="height:${x*4}px"><span>${["Apr","May","Jun","Jul","Aug","Sep"][i]}</span></div>`).join("")}</div></div>`+extra(v);
+ if(S.tab==1){const on=S.shared[S.user];return tabs+`<div class="card"><h2>${t("card")}</h2><p class="mut">${t("cardsub")}</p>
+ <div class="passport"><div class="qr">${qr(S.user)}</div><div><div style="font-size:26px;font-weight:800">${v.n[S.lang]}</div><div>${v.tr[S.lang]}</div><p>${t("avg")}: <b>${inr(v.avg)}</b> &nbsp; ${t("score")}: <b>${c.s}/100</b></p>
+ <span class="stamp ${v.ok?"":"bad"}" style="background:#fff">${v.ok?t("verified"):t("review")}</span></div></div>
+ <p><b>${t("trust")}:</b> ${v.ok?t("trok"):t("trbad")}</p>
+ <p class="${on?"plus":"mut"}">${on?t("shared"):t("notshared")}</p>
+ <button class="btn ${on?"red":"gold"}" onclick="S.shared[S.user]=!S.shared[S.user];render()">${on?t("revoke"):t("share")}</button>
+ <a class="btn out" style="text-decoration:none;display:inline-block;margin-left:8px" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(t("wa",v.n[S.lang],c.s))}">WhatsApp</a>
+ ${S.appr==S.user?`<p class="plus">🎉 ${t("offer")}</p>`:""}</div>
+ <div class="card"><h2>${t("log")}</h2>${S.log.filter(l=>l.id==S.user).map(l=>`<p>👁 ${l.who} · ${l.time}</p>`).join("")||`<p class="mut">${t("nolog")}</p>`}</div>`}
+ const ml=S.amt*(1+.05*S.mo),fl=S.amt*(1+.18*S.mo/12);
+ return tabs+`<div class="card"><h2>${t("calc")}</h2><label>${t("amt")}: <b>${inr(S.amt)}</b><input type="range" min="2000" max="30000" step="1000" value="${S.amt}" onchange="S.amt=+this.value;render()"></label>
+ <label>${t("mths")}: <b>${S.mo}</b><input type="range" min="1" max="12" value="${S.mo}" onchange="S.mo=+this.value;render()"></label>
+ <div class="cmp"><div class="a">${t("ml")}<br>${t("rep")}<b>${inr(ml)}</b></div><div class="b">${t("fl")}<br>${t("rep")}<b>${inr(fl)}</b></div></div>
+ <p style="text-align:center;margin-top:12px"><span class="stat">${t("save")}: ${inr(ml-fl)}</span></p><p class="mut">${t("note")}</p></div>`+fest(c)}
+function askV(){const v=V[S.user];v.vc=Math.min(4,(v.vc||0)+1);render()}
+function extra(v){const n=v.vc||0,nm=S.lang=="hi"?["पड़ोसी दुकानदार","नियमित ग्राहक","सप्लायर","वेंडर यूनियन"]:["Neighbour shopkeeper","Regular customer","Supplier","Vendors' union"];
+return`<div class="grid"><div class="card"><h2>🤝 ${t("cv")}</h2><p class="mut">${t("cvs")}</p>${nm.map((x,i)=>`<p>${i<n?"✅":"⬜"} ${x}</p>`).join("")}
+<button class="btn gold" onclick="askV()" ${n>=4?"disabled":""}>${t("ask")}</button> <span class="pill ok">+${Math.min(n*2,6)} ${t("pts")}</span></div>
+<div class="card"><h2>💵 ${t("cash")}</h2><p class="mut">${t("cashs")}</p><label>${t("cashl")}: <b>${inr(v.cash||0)}</b><input type="range" min="0" max="500" step="50" value="${v.cash||0}" onchange="V[S.user].cash=+this.value;render()"></label><span class="pill warn">${t("selfd")}</span></div></div>`}
+function fest(c){const w=Math.max(1,Math.ceil((new Date("2026-11-08")-new Date())/6048e5));return`<div class="card"><h2>🪔 ${t("fest")}</h2><p>${t("festd",w,inr(Math.round(c.mon*.35/1000)*1000),inr(c.loan),inr(Math.round(c.loan/150)))}</p></div>`}
+function lenderV(){const r=S.lres,v=r&&V[r.id],c=v&&calc(v);
+ return`<div class="card"><h2>${t("lender")}</h2><label>${t("pick")}<select onchange="S.lid=this.value;S.lres=null;render()">${Object.keys(V).map(k=>`<option value="${k}" ${S.lid==k?"selected":""}>${V[k].n[S.lang]} - ${V[k].tr[S.lang]}</option>`).join("")}</select></label>
+ <button class="btn" onclick="scan()">📷 ${t("scan")}</button></div>
+ ${r?(r.denied?`<div class="card err">${t("denied")}</div>`:`<div class="card"><div class="row"><div><h1>${v.n[S.lang]}</h1><p class="mut">${t("trade")}: ${v.tr[S.lang]}</p></div><span class="stamp ${v.ok?"":"bad"}">${v.ok?t("verified"):t("review")}</span></div>
+ <p><b>${t("trust")}:</b> ${v.ok?t("trok"):t("trbad")}</p>
+ <div class="grid" style="margin-top:12px"><div><p class="mut">${t("score")}</p><div class="stat">${c.s}/100</div></div><div><p class="mut">${t("avg")}</p><div class="stat">${inr(v.avg)}</div></div>
+ <div><p class="mut">${t("mon")}</p><div class="stat">${inr(c.mon)}</div></div><div><p class="mut">${t("cap")}</p><div class="stat">${inr(c.cap)}</div></div></div>
+ <div class="tip" style="margin-top:14px"><b>${t("safe")}: ${inr(c.loan)}</b><br>${t("over")} ${inr(Math.round(c.loan/150))} ${t("perday")}</div>${S.appr==S.lid?`<p class="plus">✔ ${t("apprd")}</p>`:`<button class="btn gold" onclick="S.appr=S.lid;render()">${t("appr")}</button>`}</div>`):""}`}
+function render(){document.documentElement.lang=S.lang;document.getElementById("app").innerHTML=head()+`<main>${S.user?(ACC[S.user][0]=="vendor"?vendorV():lenderV()):loginV()}</main>`;ring()}
+function ring(){const e=document.getElementById("ring");if(!e)return;const s=calc(V[S.user]).s,n=document.getElementById("num");
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.strokeDashoffset=565.5*(1-s/100)}));
+ let i=0;const id=setInterval(()=>{i+=Math.max(1,Math.round(s/40));if(i>=s){i=s;clearInterval(id)}if(n)n.textContent=i},35)}
+function setL(l){S.lang=l;render()}
+function fill(k){S.u=k;S.p="1234";S.err=0;render()}
+function login(){const u=S.u.trim().toLowerCase();if(ACC[u]&&S.p==="1234"){S.user=u;S.tab=0;S.err=0;S.p="";render()}else{S.err=1;render()}}
+function logout(){S.user=null;S.u="";S.p="";S.lres=null;render()}
+function upload(){document.getElementById("f").click()}
+function analyze(){S.busy=1;render();setTimeout(()=>{S.busy=0;render()},1600)}
+function scan(){if(S.shared[S.lid]){S.lres={id:S.lid};S.log.push({id:S.lid,who:"Bank",time:new Date().toLocaleTimeString()})}else S.lres={id:S.lid,denied:1};render()}
+function speak(s){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t("voice",s));u.lang=S.lang=="hi"?"hi-IN":"en-IN";speechSynthesis.speak(u)}catch(e){}}
+render();
+</script>
+</body>
+</html>
